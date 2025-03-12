@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Automobilių paieška</title>
+    
+</head>
+<body>
+    <div class="top-menu">
+        <button class="active">Skelbimai</button>
+        <button>Nauji auto</button>
+    </div>
+    <div class="search-container">
+        <div class="search-tabs">
+            <button class="active">Automobiliai</button>
+            <button>Moto</button>
+            <button>Krovininis</button>
+            <button>Dalys</button>
+            <button>Padangos</button>
+        </div>
+        <div id="search-form">
+            <form action="rezultatai.php" method="get">
+                <label class="search-options"><input type="checkbox" name="tik-nauji"> Tik nauji auto</label><br>
+                
+                <select class="search-options" id="marke" name="marke">
+                    <option>Markė</option>
+                    <option id="audi">Audi</option>
+                    <option id="bmw">BMW</option>
+                    <option id="volkswagen">Volkswagen</option>
+                    <option id="mazda">Mazda</option>
+                    <option id="nissan">Nissan</option>
+                    <option id="toyota">Toyota</option>
+                    <option id="porsche">Porsche</option>
+                </select>
+
+                <select class="search-options" id="modelis" name="modelis">
+                    <option>Modelis</option>
+                </select><br>
+
+                <input class="search-options" type="number" placeholder="Metai nuo">
+                <input class="search-options" type="number" placeholder="Metai iki">
+                <input class="search-options" type="number" placeholder="Kaina nuo €">
+                <input class="search-options" type="number" placeholder="Kaina iki €"><br>
+
+                <select class="search-options"><option>Kuro tipas</option></select>
+                <select class="search-options"><option>Kėbulo tipas</option></select><br>
+
+                <input class="search-options" type="text" placeholder="Tekstinė paieška"><br>
+
+                <a  href="#">Detali paieška</a>
+                <button class="search-button">Ieškoti</button>
+            </form>
+    </div>
+    <script type="module">
+    import modelsByMake from './js/masinuModeliai.js';
+
+    document.getElementById("marke").addEventListener("change", function () {
+    const marke = this.value.toLowerCase().trim();
+    const modelis = document.getElementById("modelis");
+
+    console.log("Change detected!");
+    console.log("Pasirinkta marke: " + marke);
+    console.log("Ar egzistuoja modelsByMake[marke]?", modelsByMake.hasOwnProperty(marke));
+
+    modelis.innerHTML = '<option value="">Modelis</option>'; // Reset model dropdown
+
+    if (marke && modelsByMake[marke]) {
+        modelsByMake[marke].forEach(model => {
+            console.log("Pridedamas modelis:", model); // Patikrinam, ar modeliai atkeliauja
+            const option = document.createElement("option");
+            option.value = model.toLowerCase();
+            option.textContent = model;
+            modelis.appendChild(option); // Dabar viskas veiks gerai
+        });
+    }else{
+        console.log("markei modeliu nerasta!");
+    }
+    });
+    </script>
+</body>
+</html>
