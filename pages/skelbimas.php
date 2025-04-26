@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once '../phpScript/config.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header('Location: index.php');
@@ -34,6 +34,7 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?> - AutoTurgus</title>
+    <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>

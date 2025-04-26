@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once '../phpScript/config.php';
 
 // Paieskos parametrai
 $vehicle_type = isset($_GET['vehicle_type']) ? intval($_GET['vehicle_type']) : 1;
@@ -85,18 +85,19 @@ $result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <title>Paieškos rezultatai - AutoTurgus</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/rezultatai.css">
 </head>
 <body>
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
-            <span>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
+            <span id = "greeting">Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
             <a href="naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
             <a href="api/logout.php" class="logout-btn">Atsijungti</a>
         </div>
     <?php else: ?>
         <div class="top-menu">
-            <button onclick="location.href='index.php'">Skelbimai</button>
+            <button onclick="location.href='../index.php'">Skelbimai</button>
             <button onclick="location.href='login.php'">Prisijungti</button>
             <button onclick="location.href='register.php'">Registruotis</button>
         </div>
@@ -132,7 +133,7 @@ $result = $stmt->get_result();
         <?php else: ?>
             <div class="no-results">
                 <p>Pagal Jūsų paieškos kriterijus rezultatų nerasta.</p>
-                <a href="index.php" class="back-btn">Grįžti atgal</a>
+                <a href="../index.php" class="back-btn">Grįžti atgal</a>
             </div>
         <?php endif; ?>
     </div>

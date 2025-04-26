@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once '../phpScript/config.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -84,7 +84,8 @@ $makes = $conn->query("SELECT id, name FROM makes WHERE vehicle_type_id = 1 ORDE
 <head>
     <meta charset="UTF-8">
     <title>Naujas skelbimas - AutoTurgus</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <div class="user-menu">

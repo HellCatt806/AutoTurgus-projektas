@@ -1,26 +1,27 @@
 <?php
-require_once 'config.php';
+require_once 'phpScript/config.php';
 ?>
 <!DOCTYPE html>
 <html lang="lt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/main.css">
     <title>AutoTurgus - Automobilių ir motociklų skelbimai</title>
 </head>
 <body>
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
             <span>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
-            <a href="naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
-            <a href="api/logout.php" class="logout-btn">Atsijungti</a>
+            <a href="pages/naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
+            <a href="phpScript/logout.php" class="logout-btn">Atsijungti</a>
         </div>
     <?php else: ?>
         <div class="top-menu">
             <button class="active" onclick="location.href='index.php'">Skelbimai</button>
-            <button onclick="location.href='login.php'">Prisijungti</button>
-            <button onclick="location.href='register.php'">Registruotis</button>
+            <button onclick="location.href='pages/login.php'">Prisijungti</button>
+            <button onclick="location.href='pages/register.php'">Registruotis</button>
         </div>
     <?php endif; ?>
 
@@ -30,11 +31,11 @@ require_once 'config.php';
             <button data-vehicle-type="2">Motociklai</button>
         </div>
         
-        <form action="rezultatai.php" method="get" id="search-form">
+        <form action="pages/rezultatai.php" method="get" id="search-form">
             <input type="hidden" name="vehicle_type" id="vehicle_type" value="1">
             
             <div class="form-row">
-                <select class="search-options" id="make" name="make" required>
+                <select class="search-options" id="make" name="make">
                     <option value="">Pasirinkite markę</option>
                     <?php
                     $result = $conn->query("SELECT id, name FROM makes WHERE vehicle_type_id = 1 ORDER BY name");
@@ -44,7 +45,7 @@ require_once 'config.php';
                     ?>
                 </select>
 
-                <select class="search-options" id="model" name="model" disabled required>
+                <select class="search-options" id="model" name="model" disabled>
                     <option value="">Pasirinkite modelį</option>
                 </select>
             </div>

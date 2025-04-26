@@ -1,8 +1,8 @@
 <?php
-require_once 'config.php';
+require_once '../phpScript/config.php';
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -54,9 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Registracija - AutoTurgus</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <div class="top-menu">
+        <button onclick="location.href='../index.php'">Skelbimai</button>
+        <button onclick="location.href='login.php'">Prisijungti</button>
+        <button onclick="location.href='register.php'">Registruotis</button>
+    </div>
     <div class="auth-container">
         <div class="auth-box">
             <h1>Registracija</h1>
