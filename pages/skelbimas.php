@@ -35,7 +35,7 @@ $stmt->close();
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?> - AutoTurgus</title>
     <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/skelbimas.css">
 </head>
 <body>
     <?php if (isset($_SESSION['user_id'])): ?>
@@ -74,18 +74,18 @@ $stmt->close();
                         <!-- Nuotrauka iš interneto -->
                         <img src="<?= htmlspecialchars($listing['image_url']) ?>" 
                              alt="<?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?>"
-                             onerror="this.src='images/default.jpg';">
+                             onerror="this.src='../img/default.png';">
                     <?php else: ?>
                         <!-- Lokali nuotrauka -->
                         <img src="<?= htmlspecialchars($listing['image_url']) ?>" 
                              alt="<?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?>"
-                             onerror="this.src='images/default.jpg';">
+                             onerror="this.src='../img/default.png';">
                     <?php endif; ?>
                 </div>
             <?php else: ?>
                 <!-- Jei nuotraukos nėra -->
                 <div class="listing-image">
-                    <img src="images/default.jpg" alt="Numatytoji nuotrauka">
+                    <img src="../img/default.png" alt="Numatytoji nuotrauka">
                 </div>
             <?php endif; ?>
             

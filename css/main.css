@@ -10,7 +10,7 @@ body {
 
 /* Navigacijos meniu */
 .top-menu, .user-menu {
-    background-color: #2c3e50;
+    background-color: #a224b3;
     padding: 15px;
     display: flex;
     justify-content: flex-end;
@@ -33,11 +33,11 @@ body {
 }
 
 .top-menu button.active, .user-menu .add-listing-btn {
-    background-color: #3498db;
+    background-color: #660061;
 }
 
 .top-menu button:hover, .user-menu a:hover {
-    background-color: #2980b9;
+    background-color: #660061;
 }
 
 .user-menu {
@@ -52,6 +52,7 @@ body {
 }
 .left {
     text-align: left;
+    align-items: center;
     flex: 1;
 }
 
@@ -65,5 +66,5 @@ body {
     align-items: center;
 }
 #logo {
-    height: 30px;
+    height: 35px;
 }

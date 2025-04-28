@@ -7,7 +7,7 @@ document.getElementById('make')?.addEventListener('change', function() {
     modelSelect.disabled = !makeId;
     
     if (makeId) {
-        fetch(`api/get_models.php?make_id=${makeId}`)
+        fetch(`../phpScript/get_models.php?make_id=${makeId}`)
             .then(response => response.json())
             .then(models => {
                 models.forEach(model => {
@@ -31,7 +31,7 @@ document.getElementById('make_id')?.addEventListener('change', function() {
     modelSelect.disabled = !makeId;
     
     if (makeId) {
-        fetch(`api/get_models.php?make_id=${makeId}`)
+        fetch(`../phpScript/get_models.php?make_id=${makeId}`)
             .then(response => response.json())
             .then(models => {
                 models.forEach(model => {
@@ -60,7 +60,7 @@ document.querySelectorAll('.search-tabs button')?.forEach(button => {
         document.getElementById('model').disabled = true;
         
         if (this.dataset.vehicleType) {
-            fetch(`api/get_makes.php?vehicle_type_id=${this.dataset.vehicleType}`)
+            fetch(`../phpScript/get_makes.php?vehicle_type_id=${this.dataset.vehicleType}`)
                 .then(response => response.json())
                 .then(makes => {
                     makes.forEach(make => {
@@ -96,7 +96,7 @@ document.getElementById('vehicle_type_id')?.addEventListener('change', function(
     document.getElementById('model_id').disabled = true;
     
     if (vehicleType) {
-        fetch(`api/get_makes.php?vehicle_type_id=${vehicleType}`)
+        fetch(`../phpScript/get_makes.php?vehicle_type_id=${vehicleType}`)
             .then(response => response.json())
             .then(makes => {
                 makes.forEach(make => {

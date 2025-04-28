@@ -94,7 +94,7 @@ $makes = $conn->query("SELECT id, name FROM makes WHERE vehicle_type_id = 1 ORDE
             </div>
             <div class="right">
                 <a href="naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
-                <a href="../api/logout.php" class="logout-btn">Atsijungti</a>
+                <a href="../phpScript/logout.php" class="logout-btn">Atsijungti</a>
             </div>
         </div>
 
@@ -266,7 +266,7 @@ $makes = $conn->query("SELECT id, name FROM makes WHERE vehicle_type_id = 1 ORDE
         </form>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>
 

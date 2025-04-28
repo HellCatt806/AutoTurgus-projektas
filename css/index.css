@@ -38,8 +38,8 @@
 }
 
 .search-tabs button.active {
-    color: #3498db;
-    border-bottom-color: #3498db;
+    color: #a503c5;
+    border-bottom-color: #a503c5;
 }
 
 /* Paieškos forma */
@@ -65,7 +65,7 @@
 }
 
 .search-button {
-    background-color: #3498db;
+    background-color: #8600af;
     color: white;
     border: none;
     padding: 15px;
@@ -77,7 +77,7 @@
 }
 
 .search-button:hover {
-    background-color: #2980b9;
+    background-color: #6e0085;
 }
 
 /* Atsakomasis dizainas */

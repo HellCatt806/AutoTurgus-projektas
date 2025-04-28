@@ -18,8 +18,8 @@ require_once 'phpScript/config.php';
                 <span id="greeting"><b>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</b></span>
             </div>
             <div class="right">
-                <a href="pages/naujas_skelbimas.php" class="right_lean">Pridėti skelbimą</a>
-                <a href="phpScript/logout.php" class="logout-btn">Atsijungti</a>
+                <a href="pages/naujas_skelbimas.php" class="right_lean"><b>Pridėti skelbimą</b></a>
+                <a href="phpScript/logout.php" class="logout-btn"><b>Atsijungti</b></a>
             </div>
         </div>
     <?php else: ?>

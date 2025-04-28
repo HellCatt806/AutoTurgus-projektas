@@ -1,56 +1,3 @@
-/* Pagrindiniai stiliai */
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-}
-
-/* Navigacijos meniu */
-.top-menu, .user-menu {
-    background-color: #2c3e50;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.top-menu button, .user-menu a {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    text-align: center;
-}
-
-.top-menu button.active, .user-menu .add-listing-btn {
-    background-color: #3498db;
-}
-
-.top-menu button:hover, .user-menu a:hover {
-    background-color: #2980b9;
-}
-
-.user-menu {
-    justify-content: flex-end;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-menu span {
-    color: white;
-    margin-right: auto;
-    padding-left: 20px;
-}
 
 .search-container {
     background-color: white;
@@ -209,7 +156,7 @@ body {
     display: inline-block;
     margin-top: 15px;
     padding: 8px 15px;
-    background-color: #3498db;
+    background-color: #b117ee;
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -218,7 +165,7 @@ body {
 }
 
 .details-btn:hover {
-    background-color: #2980b9;
+    background-color: #7e008a;
 }
 
 .no-results {
@@ -238,7 +185,7 @@ body {
 .back-btn {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #3498db;
+    background-color: #b117ee;
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -246,7 +193,7 @@ body {
 }
 
 .back-btn:hover {
-    background-color: #2980b9;
+    background-color: #7e008a;
 }
 
 /* Skelbimo peržiūros stiliai */
