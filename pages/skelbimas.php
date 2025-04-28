@@ -40,15 +40,23 @@ $stmt->close();
 <body>
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
-            <span>Sveiki, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
-            <a href="naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
-            <a href="api/logout.php" class="logout-btn">Atsijungti</a>
+            <div class="left">
+                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+            </div>
+            <div class="right">
+                <a href="naujas_skelbimas.php" class="right_lean">Pridėti skelbimą</a>
+                <a href="../phpScript/logout.php" class="logout-btn">Atsijungti</a>
+            </div>
         </div>
     <?php else: ?>
         <div class="top-menu">
-            <button onclick="location.href='index.php'">Skelbimai</button>
-            <button onclick="location.href='login.php'">Prisijungti</button>
-            <button onclick="location.href='register.php'">Registruotis</button>
+            <div class="left">
+                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+            </div>
+            <div class="right">
+                <button onclick="location.href='login.php'">Prisijungti</button>
+                <button onclick="location.href='register.php'">Registruotis</button>
+            </div>
         </div>
     <?php endif; ?>
 

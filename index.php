@@ -13,15 +13,24 @@ require_once 'phpScript/config.php';
 <body>
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
-            <span>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
-            <a href="pages/naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
-            <a href="phpScript/logout.php" class="logout-btn">Atsijungti</a>
+            <div class="left">
+                <a href="index.php"><img id="logo" src="img/logo.svg" alt="logo"></a>
+                <span id="greeting"><b>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</b></span>
+            </div>
+            <div class="right">
+                <a href="pages/naujas_skelbimas.php" class="right_lean">Pridėti skelbimą</a>
+                <a href="phpScript/logout.php" class="logout-btn">Atsijungti</a>
+            </div>
         </div>
     <?php else: ?>
         <div class="top-menu">
-            <button class="active" onclick="location.href='index.php'">Skelbimai</button>
-            <button onclick="location.href='pages/login.php'">Prisijungti</button>
-            <button onclick="location.href='pages/register.php'">Registruotis</button>
+            <div class="left">
+                <a href="index.php"><img id="logo" src="img/logo.svg" alt="logo"></a>
+            </div>
+            <div class="right">
+                <button onclick="location.href='pages/login.php'">Prisijungti</button>
+                <button onclick="location.href='pages/register.php'">Registruotis</button>
+            </div>
         </div>
     <?php endif; ?>
 
@@ -85,5 +94,6 @@ require_once 'phpScript/config.php';
     </div>
 
     <script src="js/script.js"></script>
+    <script src="js/greeting.js"></script>
 </body>
 </html>

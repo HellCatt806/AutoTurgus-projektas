@@ -89,10 +89,14 @@ $makes = $conn->query("SELECT id, name FROM makes WHERE vehicle_type_id = 1 ORDE
 </head>
 <body>
     <div class="user-menu">
-        <span>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</span>
-        <a href="naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
-        <a href="api/logout.php" class="logout-btn">Atsijungti</a>
-    </div>
+            <div class="left">
+                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+            </div>
+            <div class="right">
+                <a href="naujas_skelbimas.php" class="add-listing-btn">Pridėti skelbimą</a>
+                <a href="../api/logout.php" class="logout-btn">Atsijungti</a>
+            </div>
+        </div>
 
     <div class="container">
         <h1>Pridėti naują skelbimą</h1>
@@ -131,7 +135,7 @@ $makes = $conn->query("SELECT id, name FROM makes WHERE vehicle_type_id = 1 ORDE
                 
                 <div class="form-group">
                     <label for="model_id">Modelis:</label>
-                    <select id="model_id" name="model_id" required disabled>
+                    <select id="model_id" name="model_id" required>
                         <option value="">Pasirinkite modelį</option>
                         <?php if (isset($_POST['make_id'])): ?>
                             <?php 
