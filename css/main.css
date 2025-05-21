@@ -1,4 +1,3 @@
-/* Pagrindiniai stiliai */
 body {
     font-family: 'Arial', sans-serif;
     line-height: 1.6;
@@ -8,7 +7,13 @@ body {
     padding: 0;
 }
 
-/* Navigacijos meniu */
+.container { /* Bendras konteineris turiniui, jei naudojamas globaliai */
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 15px; /* Horizontalus padding, kad turinys neliptų prie kraštų */
+    box-sizing: border-box;
+}
+
 .top-menu, .user-menu {
     background-color: #a224b3;
     padding: 15px;
@@ -17,6 +22,7 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    align-items: center;
 }
 
 .top-menu button, .user-menu a {
@@ -32,7 +38,10 @@ body {
     text-align: center;
 }
 
-.top-menu button.active, .user-menu .add-listing-btn {
+.top-menu button.active, 
+.user-menu a.add-listing-btn, 
+.user-menu a.right_lean,
+.user-menu a.active { /* Pridedam .active ir user-menu nuorodoms */
     background-color: #660061;
 }
 
@@ -40,31 +49,81 @@ body {
     background-color: #660061;
 }
 
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-.top-menu {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
 .left {
-    text-align: left;
+    margin-right: auto;
+    display: flex;
     align-items: center;
-    flex: 1;
 }
 
 .right {
-    text-align: right;
+    display: flex;
     align-items: center;
-    flex: 1;
+    gap: 10px;
 }
-#greeting {
-    display: inline-flex;
-    align-items: center;
-}
+
 #logo {
     height: 35px;
+    display: block;
+}
+
+#greeting {
+    color: white;
+    margin-left: 15px;
+    font-weight: bold;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+}
+
+/* Bendri pranešimų stiliai, kurie gali būti naudojami bet kuriame puslapyje */
+.error-message, .success-message {
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+    border: 1px solid transparent;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+.error-message ul {
+    margin: 0;
+    padding-left: 20px;
+}
+.error-message p {
+    margin:0;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+.success-message p {
+    margin:0;
+}
+
+/* Atsakomasis dizainas bendriems elementams */
+@media (max-width: 768px) {
+    .top-menu, .user-menu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .left, .right {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        margin-right: 0;
+    }
+    .left {
+        margin-bottom: 10px;
+    }
+    #greeting {
+        margin-left: 0;
+        padding: 10px 0;
+    }
+    .container {
+        padding: 0 10px;
+    }
 }

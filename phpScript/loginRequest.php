@@ -1,48 +1,34 @@
 <?php
 require_once 'config.php';
-
-header('Content-Type: application/json');
+require_once 'funkc.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Tik POST metodas leidžiamas']);
-    exit;
+    sendJsonResponse(405, ['error' => 'Tik POST metodas leidžiamas']);
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
+
+if (!is_array($data)) {
+    sendJsonResponse(400, ['error' => 'Neteisingas užklausos formatas']);
+}
+
 $email = trim($data['email'] ?? '');
 $password = $data['password'] ?? '';
 
-if (empty($email) || empty($password)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Prašome užpildyti visus laukus']);
-    exit;
+$validation_errors = validateLoginData($email, $password);
+if (!empty($validation_errors)) {
+    sendJsonResponse(400, ['error' => implode(', ', $validation_errors)]);
 }
 
-$sql = "SELECT id, username, password FROM users WHERE email = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('s', $email);
-$stmt->execute();
-$result = $stmt->get_result();
+$user = verifyUserCredentials($conn, $email, $password);
 
-if ($result->num_rows === 0) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Neteisingi prisijungimo duomenys']);
-    exit;
+if ($user) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+    sendJsonResponse(200, ['success' => true, 'message' => 'Prisijungimas sėkmingas!', 'redirect' => '../index.php']);
+} else {
+    sendJsonResponse(401, ['error' => 'Neteisingi prisijungimo duomenys']);
 }
 
-$user = $result->fetch_assoc();
-if (!password_verify($password, $user['password'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Neteisingi prisijungimo duomenys']);
-    exit;
-}
-
-session_start();
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['username'] = $user['username'];
-
-echo json_encode(['success' => true, 'redirect' => '../index.php']);
-$stmt->close();
 $conn->close();
 ?>

@@ -18,6 +18,7 @@ require_once 'phpScript/config.php';
                 <span id="greeting"><b>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</b></span>
             </div>
             <div class="right">
+                 <a href="pages/paskyra/dashboard.php" class="right_lean"><b>Mano paskyra</b></a> 
                 <a href="pages/naujas_skelbimas.php" class="right_lean"><b>Pridėti skelbimą</b></a>
                 <a href="phpScript/logout.php" class="logout-btn"><b>Atsijungti</b></a>
             </div>
@@ -89,10 +90,34 @@ require_once 'phpScript/config.php';
                 </div>
             </div>
 
+                <div class="form-row">
+                <select class="search-options" name="city">
+                    <option value="">Visi miestai</option>
+                    <option value="Vilnius">Vilnius</option>
+                    <option value="Kaunas">Kaunas</option>
+                    <option value="Klaipėda">Klaipėda</option>
+                    <option value="Šiauliai">Šiauliai</option>
+                    <option value="Panevėžys">Panevėžys</option>
+                    <option value="Alytus">Alytus</option>
+                    <option value="Marijampolė">Marijampolė</option>
+                    <option value="Mažeikiai">Mažeikiai</option>
+                    <option value="Jonava">Jonava</option>
+                    <option value="Utena">Utena</option>
+                    <option value="Kėdainiai">Kėdainiai</option>
+                    <option value="Telšiai">Telšiai</option>
+                    <option value="Tauragė">Tauragė</option>
+                    <option value="Ukmergė">Ukmergė</option>
+                    <option value="Visaginas">Visaginas</option>
+                    <option value="Kita">Kita</option>
+                </select>
+                </div>
+
             <button type="submit" class="search-button">Ieškoti</button>
         </form>
     </div>
-
+<script>
+    const PHP_SCRIPTS_ROOT_PATH = 'phpScript/';
+</script>
     <script src="js/script.js"></script>
     <script src="js/greeting.js"></script>
 </body>

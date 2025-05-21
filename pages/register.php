@@ -1,53 +1,55 @@
 <?php
 require_once '../phpScript/config.php';
+require_once '../phpScript/funkc.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: ../index.php');
     exit;
 }
 
-$error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $phone = preg_replace('/[^0-9+]/', '', $_POST['phone']);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    
-    if (empty($username) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
-        $error = 'Prašome užpildyti visus laukus';
-    } elseif ($password !== $confirm_password) {
-        $error = 'Slaptažodžiai nesutampa';
-    } elseif (strlen($password) < 8) {
-        $error = 'Slaptažodis turi būti bent 8 simbolių ilgio';
-    } else {
+$page_errors = [];
+$form_data = [
+    'username' => '',
+    'email' => '',
+    'phone' => ''
+];
 
-        $sql = "SELECT id FROM users WHERE email = ? OR username = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('ss', $email, $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            $error = 'Vartotojas su tokiu el. paštu ar vardu jau egzistuoja';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone_raw = $_POST['phone'] ?? '';
+    $phone = preg_replace('/[^0-9+]/', '', $phone_raw);
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+
+    $form_data['username'] = htmlspecialchars($username);
+    $form_data['email'] = htmlspecialchars($email);
+    $form_data['phone'] = htmlspecialchars($phone_raw);
+
+    $validation_errors = validateRegistrationData($username, $email, $phone, $password, $confirm_password);
+    if (!empty($validation_errors)) {
+        $page_errors = array_merge($page_errors, $validation_errors);
+    } else {
+        if (userExists($conn, $email, $username)) {
+            $page_errors[] = 'Vartotojas su tokiu el. paštu ar vardu jau egzistuoja';
         } else {
-        
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-            
-            $sql = "INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param('ssss', $username, $hashed_password, $email, $phone);
-            
-            if ($stmt->execute()) {
-                $_SESSION['registration_success'] = true;
-                header('Location: login.php');
-                exit;
+            if ($hashed_password === false) {
+                $page_errors[] = 'Sistemos klaida. Bandykite vėliau.';
+                error_log("Password hashing failed for user: " . $email . " in pages/register.php");
             } else {
-                $error = 'Registracijos klaida: ' . $conn->error;
+                if (createUser($conn, $username, $hashed_password, $email, $phone)) {
+                    $_SESSION['registration_success'] = 'Registracija sėkminga! Dabar galite prisijungti.';
+                    header('Location: login.php');
+                    exit;
+                } else {
+                    $page_errors[] = 'Registracijos klaida. Bandykite vėliau.';
+                }
             }
         }
     }
 }
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="lt">
@@ -55,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Registracija - AutoTurgus</title>
     <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/register.css">
 </head>
 <body>
     <div class="top-menu">
@@ -64,31 +66,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="right">
             <button onclick="location.href='login.php'">Prisijungti</button>
-            <button onclick="location.href='register.php'">Registruotis</button>
+            <button onclick="location.href='register.php'" class="active">Registruotis</button>
         </div>
     </div>
     <div class="auth-container">
-        <div class="auth-box">
+        <div class="auth-box" id="register-box">
             <h1>Registracija</h1>
             
-            <?php if ($error): ?>
-                <div class="error-message"><?= $error ?></div>
+            <?php if (!empty($page_errors)): ?>
+                <div class="error-message">
+                    <?php foreach ($page_errors as $err): ?>
+                        <p><?= htmlspecialchars($err) ?></p>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
             
-            <form id="register-form" method="post">
+            <form id="register-form" method="post" action="register.php">
                 <div class="form-group">
                     <label for="username">Vartotojo vardas:</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" value="<?= $form_data['username'] ?>" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="email">El. paštas:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" value="<?= $form_data['email'] ?>" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="phone">Telefono numeris:</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <input type="tel" id="phone" name="phone" value="<?= $form_data['phone'] ?>" required placeholder="+370xxxxxxxx">
                 </div>
                 
                 <div class="form-group">
@@ -107,5 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="auth-link">Jau turite paskyrą? <a href="login.php">Prisijunkite čia</a></p>
         </div>
     </div>
+    <script src="../js/script.js"></script>
 </body>
 </html>

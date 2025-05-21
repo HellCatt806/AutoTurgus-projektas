@@ -1,67 +1,43 @@
 <?php
 require_once 'config.php';
-
-header('Content-Type: application/json');
+require_once 'funkc.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Tik POST metodas leidžiamas']);
-    exit;
+    sendJsonResponse(405, ['error' => '']);
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
+
+if (!is_array($data)) {
+    sendJsonResponse(400, ['error' => 'Neteisingas formatas']);
+}
+
 $username = trim($data['username'] ?? '');
 $email = trim($data['email'] ?? '');
 $phone = preg_replace('/[^0-9+]/', '', $data['phone'] ?? '');
 $password = $data['password'] ?? '';
 $confirm_password = $data['confirm_password'] ?? '';
 
-if (empty($username) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Prašome užpildyti visus laukus']);
-    exit;
+$validation_errors = validateRegistrationData($username, $email, $phone, $password, $confirm_password);
+if (!empty($validation_errors)) {
+    sendJsonResponse(400, ['error' => implode(', ', $validation_errors)]);
 }
 
-if ($password !== $confirm_password) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Slaptažodžiai nesutampa']);
-    exit;
+if (userExists($conn, $email, $username)) {
+    sendJsonResponse(400, ['error' => 'Vartotojas su tokiu el. paštu ar vardu jau egzistuoja']);
 }
-
-if (strlen($password) < 8) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Slaptažodis turi būti bent 8 simbolių ilgio']);
-    exit;
-}
-
-
-$sql = "SELECT id FROM users WHERE email = ? OR username = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('ss', $email, $username);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Vartotojas su tokiu el. paštu ar vardu jau egzistuoja']);
-    exit;
-}
-
 
 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-
-$sql = "INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('ssss', $username, $hashed_password, $email, $phone);
-
-if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'redirect' => '../login.php']);
-} else {
-    http_response_code(500);
-    echo json_encode(['error' => 'Registracijos klaida: ' . $conn->error]);
+if ($hashed_password === false) {
+    error_log("Password hashing failed for user: " . $email);
+    sendJsonResponse(500, ['error' => 'Sistemos klaida kuriant slaptažodį']);
 }
 
-$stmt->close();
+if (createUser($conn, $username, $hashed_password, $email, $phone)) {
+    sendJsonResponse(200, ['success' => true, 'message' => 'Registracija sėkminga!', 'redirect' => '../login.php']);
+} else {
+    sendJsonResponse(500, ['error' => 'Registracijos klaida. Bandykite vėliau.']);
+}
+
 $conn->close();
 ?>

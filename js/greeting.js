@@ -5,7 +5,7 @@ window.onload = function() {
         greeting.style.opacity = '0';
 
         setTimeout(function() {
-            greeting.remove(); //removes greeting
+            greeting.remove();
         }, 1000);
     }, 1500);
 };

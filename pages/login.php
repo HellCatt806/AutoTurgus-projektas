@@ -1,40 +1,42 @@
 <?php
 require_once '../phpScript/config.php';
+require_once '../phpScript/funkc.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: ../index.php');
     exit;
 }
 
-$error = '';
+$page_errors = [];
+$form_data = ['email' => ''];
+
+$success_message = '';
+if (isset($_SESSION['registration_success'])) {
+    $success_message = $_SESSION['registration_success'];
+    unset($_SESSION['registration_success']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-    
-    if (empty($email) || empty($password)) {
-        $error = 'Prašome užpildyti visus laukus';
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $form_data['email'] = htmlspecialchars($email);
+
+    $validation_errors = validateLoginData($email, $password);
+    if (!empty($validation_errors)) {
+        $page_errors = array_merge($page_errors, $validation_errors);
     } else {
-        $sql = "SELECT id, username, password FROM users WHERE email = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('s', $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                header('Location: ../index.php');
-                exit;
-            } else {
-                $error = 'Neteisingas slaptažodis';
-            }
+        $user = verifyUserCredentials($conn, $email, $password);
+        if ($user) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            header('Location: ../index.php');
+            exit;
         } else {
-            $error = 'Vartotojas su tokiu el. paštu nerastas';
+            $page_errors[] = 'Neteisingi prisijungimo duomenys';
         }
     }
 }
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="lt">
@@ -42,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Prisijungimas - AutoTurgus</title>
     <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../ss/login.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
     <div class="top-menu">
@@ -50,22 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
         </div>
         <div class="right">
-            <button onclick="location.href='login.php'">Prisijungti</button>
+            <button onclick="location.href='login.php'" class="active">Prisijungti</button>
             <button onclick="location.href='register.php'">Registruotis</button>
         </div>
     </div>
     <div class="auth-container">
-        <div class="auth-box">
+        <div class="auth-box" id="login-box">
             <h1>Prisijungimas</h1>
             
-            <?php if ($error): ?>
-                <div class="error-message"><?= $error ?></div>
+            <?php if (!empty($page_errors)): ?>
+                <div class="error-message">
+                    <?php foreach ($page_errors as $err): ?>
+                        <p><?= htmlspecialchars($err) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($success_message): ?>
+                <div class="success-message">
+                    <p><?= htmlspecialchars($success_message) ?></p>
+                </div>
             <?php endif; ?>
             
-            <form id="login-form" method="post">
+            <form id="login-form" method="post" action="login.php">
                 <div class="form-group">
                     <label for="email">El. paštas:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" value="<?= $form_data['email'] ?>" required>
                 </div>
                 
                 <div class="form-group">
@@ -79,5 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="auth-link">Neturite paskyros? <a href="register.php">Registruokitės čia</a></p>
         </div>
     </div>
+    <script src="../js/script.js"></script>
 </body>
 </html>

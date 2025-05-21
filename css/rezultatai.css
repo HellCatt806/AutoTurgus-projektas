@@ -1,276 +1,209 @@
-
-.search-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 25px;
-    margin: 30px auto;
-    max-width: 1000px;
-}
-
-.search-container h1 {
+/* css/rezultatai.css */
+.container h1 { /* Antraštė rezultatų puslapyje */
     text-align: center;
     color: #2c3e50;
-    margin-top: 0;
+    margin-top: 10px; /* Sumažintas tarpas, nes .container jau turi savo margin */
+    margin-bottom: 30px;
 }
 
-.search-tabs {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 20px;
-    justify-content: center;
-}
-
-.search-tabs button {
-    background: none;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #7f8c8d;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s;
-}
-
-.search-tabs button.active {
-    color: #3498db;
-    border-bottom-color: #3498db;
-}
-
-/* Paieškos forma */
-#search-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-row {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.search-options {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    flex: 1;
-    min-width: 200px;
-}
-
-.search-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-}
-
-.search-button:hover {
-    background-color: #2980b9;
-}
-
-/* Atsakomasis dizainas */
-@media (max-width: 768px) {
-    .form-row {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .search-options {
-        width: 100%;
-    }
-    
-    .top-menu, .user-menu {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .user-menu span {
-        padding: 10px 0;
-        text-align: center;
-    }
-}
-/* Skelbimų rezultatų stiliai */
 .results-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px; /* Padidintas tarpas */
+    margin-top: 0; /* Pašalintas, nes .container h1 duoda tarpą */
 }
 
 .car-item {
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1); /* Šiek tiek ryškesnis šešėlis */
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0; /* Pridėtas subtilus rėmelis */
 }
 
 .car-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 .car-item img {
     width: 100%;
-    height: 200px;
+    height: 220px; /* Padidintas aukštis */
     object-fit: cover;
+    display: block;
+    border-bottom: 1px solid #e0e0e0; /* Linija po nuotrauka */
 }
 
 .car-info {
-    padding: 20px;
+    padding: 18px; /* Padidintas padding */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .car-info h2 {
     margin-top: 0;
-    color: #2c3e50;
-    font-size: 1.4em;
+    margin-bottom: 12px;
+    color: #333; /* Tamsesnė spalva */
+    font-size: 1.35em;
+    font-weight: 600; /* Pusriebis šriftas */
+    line-height: 1.3;
 }
 
 .car-specs {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 15px 0;
+    grid-template-columns: 1fr 1fr; /* Paliekam du stulpelius */
+    gap: 8px 12px; /* Tarpas tarp eilučių ir stulpelių */
+    margin: 10px 0 15px 0; /* Padidintas apatinis margin */
+    font-size: 0.9em;
+    color: #555;
 }
 
 .car-specs p {
-    margin: 5px 0;
-    font-size: 0.9em;
+    margin: 4px 0;
+    display: flex; /* Geresniam išlygiavimui */
+    justify-content: space-between; /* Išskiria label ir value */
+}
+.car-specs p strong {
+    color: #333;
+    margin-right: 5px; /* Tarpelis nuo reikšmės */
+    font-weight: 500;
+}
+/* Jei norite, kad reikšmės būtų dešinėje */
+.car-specs p span { 
+    /* text-align: right; */ /* Gali prireikti papildomo elemento */
 }
 
+
 .contact-info {
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: auto;
+    padding-top: 12px;
     border-top: 1px solid #eee;
     font-size: 0.9em;
+    color: #444;
+}
+.contact-info strong {
+    color: #333;
 }
 
 .details-btn {
+    background-color: #b117ee; 
+    color: white;
+    border: none;
+    padding: 9px 18px; /* Šiek tiek mažesnis mygtukas */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em; /* Šiek tiek mažesnis šriftas */
+    transition: background-color 0.3s;
+    text-decoration: none;
     display: inline-block;
     margin-top: 15px;
-    padding: 8px 15px;
-    background-color: #b117ee;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    font-size: 0.9em;
+    align-self: flex-start;
 }
-
 .details-btn:hover {
     background-color: #7e008a;
 }
 
 .no-results {
     text-align: center;
-    padding: 40px;
+    padding: 40px 20px; /* Padidintas padding */
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    margin: 30px auto;
+    max-width: 600px;
 }
 
 .no-results p {
-    font-size: 1.2em;
-    color: #7f8c8d;
-    margin-bottom: 20px;
+    font-size: 1.25em; /* Padidintas šriftas */
+    color: #555;
+    margin-bottom: 25px;
 }
 
-.back-btn {
-    display: inline-block;
-    padding: 10px 20px;
+.back-btn { /* Mygtukas grįžti atgal iš no-results */
     background-color: #b117ee;
     color: white;
-    text-decoration: none;
+    border: none;
+    padding: 10px 22px;
     border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
     transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
 }
-
 .back-btn:hover {
     background-color: #7e008a;
 }
 
-/* Skelbimo peržiūros stiliai */
-.listing-details {
-    background-color: white;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-top: 20px;
+@media (max-width: 768px) {
+    .results-container {
+        gap: 20px;
+    }
+    .container h1 {
+        font-size: 1.6em;
+    }
 }
 
-.listing-image img {
-    width: 100%;
-    max-height: 500px;
-    object-fit: contain;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    border: 1px solid #eee;
+@media (max-width: 480px) {
+    .car-specs {
+        grid-template-columns: 1fr; /* Viskas viename stulpelyje */
+         gap: 6px;
+    }
+    .car-specs p {
+        justify-content: flex-start; /* Kad nebūtų ištempta */
+    }
+    .car-info h2 {
+        font-size: 1.2em;
+    }
+     .details-btn {
+        width: 100%;
+        text-align: center;
+    }
 }
-
-.listing-specs {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.spec-row {
+.pages {
     display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.spec-label {
-    font-weight: bold;
-    color: #7f8c8d;
-}
-
-.spec-value {
-    color: #2c3e50;
-}
-
-.listing-description {
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
     margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.listing-description h2 {
-    color: #2c3e50;
-    margin-top: 0;
-}
-
-.listing-description p {
-    line-height: 1.6;
-    white-space: pre-line;
-}
-
-.back-link {
-    display: inline-block;
     margin-bottom: 20px;
-    color: #3498db;
+    flex-wrap: wrap;
+}
+
+.pages a, 
+.pages span.current-page, 
+.pages span.ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    color: #a224b3;
+    background-color: #fff;
     text-decoration: none;
-    font-size: 16px;
+    border-radius: 50%;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.back-link:hover {
-    text-decoration: underline;
+.pages a:hover {
+    background-color: #f2e6f7;
+    border-color: #cba0d3;
 }
 
-/* Klaidos pranešimai */
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    border: 1px solid #f5c6cb;
+.pages span.current-page {
+    background-color: #a224b3;
+    color: white;
+    border-color: #a224b3;
+    font-weight: bold;
+    cursor: default;
+    box-shadow: 0 2px 5px rgba(162, 36, 179, 0.3);
 }
