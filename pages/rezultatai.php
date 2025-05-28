@@ -33,11 +33,11 @@ $types = 'i';
 $sortOptions = [
     'price_asc' => ' ORDER BY l.price ASC',
     'price_desc' => ' ORDER BY l.price DESC',
-    'date_desc' => ' ORDER BY l.year DESC'
+    'date_desc' => ' ORDER BY l.created_at DESC'
 ];
 
 $sortKey = $_POST['option'] ?? 'price_asc'; // default sort
-$selectedOption = $sortOptions[$sortKey] ?? $sortOptions['price_asc'];
+$selectedOption = $sortOptions[$sortKey] ?? $sortOptions['date_desc'];
 
 if ($make_id !== null) {
     $sql_conditions .= " AND l.make_id = ?";
