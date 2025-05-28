@@ -85,7 +85,7 @@ if (isset($_SESSION['favorite_action_error'])) {
 <body>
     <div class="user-menu">
         <div class="left">
-            <a href="../../index.php"><img id="logo" src="../../img/logo.svg" alt="logo"></a>
+            <a href="../../index.php"><img id="logo" src="../../img/logo.png" alt="logo"></a>
         </div>
         <div class="right">
             <a href="dashboard.php" class="active">Mano Paskyra</a>

@@ -30,6 +30,15 @@ $sql_conditions = " WHERE l.vehicle_type_id = ? ";
 $params = [$vehicle_type];
 $types = 'i';
 
+$sortOptions = [
+    'price_asc' => ' ORDER BY l.price ASC',
+    'price_desc' => ' ORDER BY l.price DESC',
+    'date_desc' => ' ORDER BY l.year DESC'
+];
+
+$sortKey = $_POST['option'] ?? 'price_asc'; // default sort
+$selectedOption = $sortOptions[$sortKey] ?? $sortOptions['price_asc'];
+
 if ($make_id !== null) {
     $sql_conditions .= " AND l.make_id = ?";
     $params[] = $make_id;
@@ -120,7 +129,8 @@ $sql_listings = "SELECT l.id, l.year, l.price, l.mileage, l.body_type, l.fuel_ty
                  JOIN makes mk ON l.make_id = mk.id 
                  JOIN models md ON l.model_id = md.id "
                . $sql_conditions 
-               . " ORDER BY l.created_at DESC LIMIT ? OFFSET ?";
+               . $selectedOption
+               . " LIMIT ? OFFSET ?";
 
 $params_listings = $params;
 $types_listings = $types;
@@ -153,7 +163,7 @@ if ($stmt_listings) {
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
             <div class="left">
-                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+                <a href="../index.php"><img id="logo" src="../img/logo.png" alt="logo"></a>
             </div>
             <div class="right">
                 <a href="paskyra/dashboard.php">Mano paskyra</a>
@@ -164,7 +174,7 @@ if ($stmt_listings) {
     <?php else: ?>
         <div class="top-menu">
             <div class="left">
-                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+                <a href="../index.php"><img id="logo" src="../img/logo.png" alt="logo"></a>
             </div>
             <div class="right">
                 <button onclick="location.href='login.php'">Prisijungti</button>
@@ -175,6 +185,24 @@ if ($stmt_listings) {
 
     <div class="container">
         <h1><?= $vehicle_type == 1 ? 'Automobilių' : 'Motociklų' ?> paieškos rezultatai</h1>
+
+    <form method="POST">
+        <div class="radio-container">
+            <div class="radio-header"><b id="sort_header">Skelbimų rušiavimas</b></div>
+                <div class="radio-options">
+                    <label class="radio-label">
+                    <input type="radio" name="option" value="price_asc" onchange="this.form.submit()" <?= $sortKey == 'price_asc' ? 'checked' : '' ?>> Pigiausi viršuje
+                    </label><br>
+                    <label class="radio-label">
+                    <input type="radio" name="option" value="price_desc" onchange="this.form.submit()" <?= $sortKey == 'price_desc' ? 'checked' : '' ?>> Brangiausi viršuje
+                    </label><br>
+                    <label class="radio-label">
+                    <input type="radio" name="option" value="date_desc" onchange="this.form.submit()" <?= $sortKey == 'date_desc' ? 'checked' : '' ?>> Naujausi skelbimai viršuje
+                    </label>
+                </div>
+        </div>
+    </form>
+
         
         <?php if ($result_listings_data && $result_listings_data->num_rows > 0): ?>
             <div class="results-container">

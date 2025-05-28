@@ -88,7 +88,7 @@ if (isset($_SESSION['favorite_action_error'])) {
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
             <div class="left">
-                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+                <a href="../index.php"><img id="logo" src="../img/logo.png" alt="logo"></a>
             </div>
             <div class="right">
                 <a href="paskyra/dashboard.php">Mano Paskyra</a>
@@ -99,7 +99,7 @@ if (isset($_SESSION['favorite_action_error'])) {
     <?php else: ?>
         <div class="top-menu">
             <div class="left">
-                <a href="../index.php"><img id="logo" src="../img/logo.svg" alt="logo"></a>
+                <a href="../index.php"><img id="logo" src="../img/logo.png" alt="logo"></a>
             </div>
             <div class="right">
                 <button onclick="location.href='login.php'">Prisijungti</button>

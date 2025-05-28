@@ -14,7 +14,7 @@ require_once 'phpScript/config.php';
     <?php if (isset($_SESSION['user_id'])): ?>
         <div class="user-menu">
             <div class="left">
-                <a href="index.php"><img id="logo" src="img/logo.svg" alt="logo"></a>
+                <a href="index.php"><img id="logo" src="img/logo.png" alt="logo"></a>
                 <span id="greeting"><b>Sveikas, <?= htmlspecialchars($_SESSION['username']) ?>!</b></span>
             </div>
             <div class="right">
@@ -26,7 +26,7 @@ require_once 'phpScript/config.php';
     <?php else: ?>
         <div class="top-menu">
             <div class="left">
-                <a href="index.php"><img id="logo" src="img/logo.svg" alt="logo"></a>
+                <a href="index.php"><img id="logo" src="img/logo.png" alt="logo"></a>
             </div>
             <div class="right">
                 <button onclick="location.href='pages/login.php'">Prisijungti</button>

@@ -207,3 +207,42 @@
     cursor: default;
     box-shadow: 0 2px 5px rgba(162, 36, 179, 0.3);
 }
+
+.radio-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .radio-options {
+    display: none;
+    position: absolute;
+    background: #f1f1f1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    z-index: 1;
+  }
+  .radio-label:hover {
+    background-color: #a50a95ac;
+  }
+  .radio-container:hover .radio-options {
+    display: block;
+  }
+  .radio-header {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 6%;
+  }
+  .radio-label {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 6%;
+  }
+  #sort_header {
+    background-color: #7e008a;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
