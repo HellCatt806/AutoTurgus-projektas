@@ -37,7 +37,25 @@ function userExists(mysqli $conn, string $email, string $username): bool {
     $stmt->close();
     return $result->num_rows > 0;
 }
+function returnUsername(mysqli $conn, string $email): string {
+    $stmt = $conn->prepare("SELECT username FROM users WHERE email = ?");
+    if(!$stmt){
+        
+    }
 
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    $stmt->close();
+
+    if ($row && isset($row['username'])) {
+        return $row['username'];
+    } else {
+        return null;
+    }
+}
 function createUser(mysqli $conn, string $username, string $hashed_password, string $email, string $phone): bool {
     $sql = "INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);

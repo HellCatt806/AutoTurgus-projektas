@@ -40,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 if (createUser($conn, $username, $hashed_password, $email, $phone)) {
                     $_SESSION['registration_success'] = 'Registracija sėkminga! Dabar galite prisijungti.';
-                    header('Location: login.php');
+                    $_SESSION['email'] = $email;
+                    header('Location: ../phpScript/welcome_email.php');
                     exit;
                 } else {
                     $page_errors[] = 'Registracijos klaida. Bandykite vėliau.';
