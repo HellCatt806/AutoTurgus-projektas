@@ -34,22 +34,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $form_data[$key] = $_POST[$key];
         }
     }
-    
+
     $uploaded_image_paths = [];
     $primary_image_path_for_listing_table = null;
+    $selected_primary_image_index = isset($_POST['primary_image_index']) ? intval($_POST['primary_image_index']) : 0;
 
-    if (isset($_FILES['image_uploads']) && !empty($_FILES['image_uploads']['name'][0])) {
-        $image_upload_results = handleMultipleImageUploads($_FILES['image_uploads'], $upload_dir_absolute);
-
-        if (!empty($image_upload_results['errors'])) {
-            foreach ($image_upload_results['errors'] as $error) {
-                $page_errors[] = $error;
+    if (isset($_FILES['image_uploads']) && is_array($_FILES['image_uploads']['name']) && !empty(array_filter($_FILES['image_uploads']['name']))) {
+        $nonEmptyFiles = 0;
+        foreach ($_FILES['image_uploads']['error'] as $error) {
+            if ($error !== UPLOAD_ERR_NO_FILE) {
+                $nonEmptyFiles++;
             }
         }
-        if (!empty($image_upload_results['paths'])) {
-            $uploaded_image_paths = $image_upload_results['paths'];
-            if (count($uploaded_image_paths) > 0) {
-                $primary_image_path_for_listing_table = $uploaded_image_paths[0];
+
+        if ($nonEmptyFiles > 0) {
+            $image_upload_results = handleMultipleImageUploads($_FILES['image_uploads'], $upload_dir_absolute);
+
+            if (!empty($image_upload_results['errors'])) {
+                foreach ($image_upload_results['errors'] as $error) {
+                    $page_errors[] = $error;
+                }
+            }
+            if (!empty($image_upload_results['paths'])) {
+                $uploaded_image_paths = $image_upload_results['paths'];
+                if (count($uploaded_image_paths) > 0) {
+                    if ($selected_primary_image_index >= 0 && $selected_primary_image_index < count($uploaded_image_paths)) {
+                        $primary_image_path_for_listing_table = $uploaded_image_paths[$selected_primary_image_index];
+                    } else {
+                        $primary_image_path_for_listing_table = $uploaded_image_paths[0];
+                        $selected_primary_image_index = 0;
+                    }
+                }
             }
         }
     }
@@ -101,11 +116,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($conn->query($sql_direct_insert_listing) === TRUE) {
             $new_listing_id = $conn->insert_id;
 
-            if (!empty($uploaded_image_paths) && $new_listing_id > 0) {
+           if (!empty($uploaded_image_paths) && $new_listing_id > 0) {
                 $stmt_insert_image = $conn->prepare("INSERT INTO listing_images (listing_id, image_path, is_primary) VALUES (?, ?, ?)");
                 if ($stmt_insert_image) {
                     foreach ($uploaded_image_paths as $index => $image_path) {
-                        $is_primary_flag = ($index === 0) ? 1 : 0;
+                        $is_primary_flag = ($index === $selected_primary_image_index) ? 1 : 0;
                         $stmt_insert_image->bind_param("isi", $new_listing_id, $image_path, $is_primary_flag);
                         if (!$stmt_insert_image->execute()) {
                             $page_errors[] = "Klaida saugant nuotrauką: " . htmlspecialchars($image_path) . " - " . $stmt_insert_image->error;
@@ -357,6 +372,10 @@ if ($conn) {
                 <div class="form-group">
                     <label for="image_upload">Nuotrauka:</label>
                     <input type="file" id="image_uploads" name="image_uploads[]" multiple accept="image/jpeg,image/png,image/gif">
+                    <div id="image_previews_container" class="image-previews">
+                        </div>
+                    <input type="hidden" name="primary_image_index" id="primary_image_index" value="0">
+                    <small class="form-text text-muted">Pasirinkite pagrindinę nuotrauką</small>
                     <small class="form-text text-muted">Leidžiami formatai: JPG, JPEG, PNG, GIF (iki 5MB)</small>
                 </div>
                 

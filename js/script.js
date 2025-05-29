@@ -296,3 +296,238 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500); 
     }
 });
+const imageUploadsInput = document.getElementById('image_uploads');
+    const imagePreviewsContainer = document.getElementById('image_previews_container');
+    const primaryImageIndexInput = document.getElementById('primary_image_index');
+
+    if (imageUploadsInput && imagePreviewsContainer && primaryImageIndexInput) {
+        imageUploadsInput.addEventListener('change', function(event) {
+            imagePreviewsContainer.innerHTML = '';
+            primaryImageIndexInput.value = '0';
+
+            const files = event.target.files;
+            if (files.length === 0) {
+                const p = document.createElement('p');
+                p.textContent = 'Nepasirinkta jokių nuotraukų.';
+                imagePreviewsContainer.appendChild(p);
+                return;
+            }
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('img-preview-wrapper');
+                    if (index === 0) {
+                        wrapper.classList.add('primary');
+                    }
+                    wrapper.dataset.index = index;
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = file.name;
+
+                    const indicator = document.createElement('span');
+                    indicator.classList.add('primary-indicator');
+                    indicator.textContent = 'Pagrindinė';
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(indicator);
+                    imagePreviewsContainer.appendChild(wrapper);
+
+                    wrapper.addEventListener('click', function() {
+                        imagePreviewsContainer.querySelectorAll('.img-preview-wrapper').forEach(el => {
+                            el.classList.remove('primary');
+                        });
+                        this.classList.add('primary');
+                        primaryImageIndexInput.value = this.dataset.index;
+                    });
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+        if (imagePreviewsContainer.children.length === 0) {
+             const p = document.createElement('p');
+             p.textContent = 'Nepasirinkta jokių nuotraukų.';
+             imagePreviewsContainer.appendChild(p);
+        }
+    }
+const imageUploadsInputEdit = document.getElementById('image_uploads_edit');
+const imagePreviewsContainerEdit = document.getElementById('new_image_previews_container_edit');
+const editListingForm = document.getElementById('edit-listing-form');
+const submitEditFormBtn = document.getElementById('submit-edit-form-btn');
+const primaryNewImageIdentifierInputEdit = document.getElementById('primary_new_image_identifier_edit');
+let newFilesDataEdit = [];
+
+if (imageUploadsInputEdit && imagePreviewsContainerEdit && editListingForm && submitEditFormBtn && primaryNewImageIdentifierInputEdit) {
+
+    imageUploadsInputEdit.addEventListener('change', function(event) {
+        const newFiles = Array.from(event.target.files);
+        newFilesDataEdit = newFiles.map((file, index) => ({
+            file: file,
+            id: `new_${Date.now()}_${index}`
+        }));
+        
+        primaryNewImageIdentifierInputEdit.value = "";
+        if (newFilesDataEdit.length > 0) {
+            const existingPrimaryRadio = editListingForm.querySelector('input[name="primary_image_id"]:checked');
+            let isExistingPrimarySelectedAndNotDeleted = false;
+            if (existingPrimaryRadio) {
+                const existingWrapper = existingPrimaryRadio.closest('.img-preview-wrapper-existing');
+                const deleteCheckbox = existingWrapper ? existingWrapper.querySelector('input[name="delete_images[]"]') : null;
+                if (!deleteCheckbox || !deleteCheckbox.checked) {
+                    isExistingPrimarySelectedAndNotDeleted = true;
+                }
+            }
+
+            if (!isExistingPrimarySelectedAndNotDeleted) {
+                primaryNewImageIdentifierInputEdit.value = newFilesDataEdit[0].id;
+                if(existingPrimaryRadio) existingPrimaryRadio.checked = false;
+            }
+        }
+        renderNewImagePreviewsEdit();
+    });
+
+    function renderNewImagePreviewsEdit() {
+        imagePreviewsContainerEdit.innerHTML = '';
+        if (newFilesDataEdit.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'Nepasirinkta naujų nuotraukų.';
+            imagePreviewsContainerEdit.appendChild(p);
+            return;
+        }
+
+        const currentNewPrimaryId = primaryNewImageIdentifierInputEdit.value;
+
+        newFilesDataEdit.forEach((fileData) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('img-preview-wrapper');
+                if (fileData.id === currentNewPrimaryId) {
+                    wrapper.classList.add('primary');
+                }
+                wrapper.dataset.fileId = fileData.id;
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = fileData.file.name;
+
+                const primaryIndicator = document.createElement('span');
+                primaryIndicator.classList.add('primary-indicator');
+                primaryIndicator.textContent = 'Pagrindinė';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.classList.add('delete-new-preview-btn');
+                deleteBtn.innerHTML = '&times;';
+                deleteBtn.title = 'Pašalinti';
+
+                wrapper.addEventListener('click', function() {
+                    imagePreviewsContainerEdit.querySelectorAll('.img-preview-wrapper').forEach(el => el.classList.remove('primary'));
+                    const existingRadios = editListingForm.querySelectorAll('input[name="primary_image_id"]');
+                    existingRadios.forEach(radio => {
+                        radio.checked = false;
+                        const radioWrapper = radio.closest('.img-preview-wrapper-existing');
+                        if(radioWrapper) radioWrapper.classList.remove('primary');
+                    });
+                    this.classList.add('primary');
+                    primaryNewImageIdentifierInputEdit.value = this.dataset.fileId;
+                });
+
+                deleteBtn.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const fileIdToRemove = wrapper.dataset.fileId;
+                    if (primaryNewImageIdentifierInputEdit.value === fileIdToRemove) {
+                        primaryNewImageIdentifierInputEdit.value = "";
+                    }
+                    newFilesDataEdit = newFilesDataEdit.filter(fd => fd.id !== fileIdToRemove);
+                    renderNewImagePreviewsEdit();
+                });
+                
+                wrapper.appendChild(img);
+                wrapper.appendChild(primaryIndicator);
+                wrapper.appendChild(deleteBtn);
+                imagePreviewsContainerEdit.appendChild(wrapper);
+            }
+            reader.readAsDataURL(fileData.file);
+        });
+    }
+
+    submitEditFormBtn.addEventListener('click', function() {
+        const formData = new FormData(editListingForm);
+        formData.delete('image_uploads[]'); 
+        newFilesDataEdit.forEach(fileDataObject => {
+            formData.append('image_uploads[]', fileDataObject.file, fileDataObject.file.name);
+        });
+
+        fetch(editListingForm.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok && response.redirected) {
+                window.location.href = response.url; 
+            } else if (response.ok) { 
+                window.location.reload(); 
+            } else {
+                response.text().then(text => {
+                    console.error('Klaida:', text);
+                    alert('Klaida atnaujinant skelbimą.');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Tinklo klaida:', error);
+            alert('Tinklo klaida.');
+        });
+    });
+    
+    const existingRadiosInEdit = editListingForm.querySelectorAll('input[name="primary_image_id"]');
+    existingRadiosInEdit.forEach(radio => {
+        const wrapper = radio.closest('.img-preview-wrapper-existing'); 
+        if (wrapper) {
+             if (radio.checked) {
+                wrapper.classList.add('primary');
+            }
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    if(primaryNewImageIdentifierInputEdit) primaryNewImageIdentifierInputEdit.value = ""; 
+                    imagePreviewsContainerEdit.querySelectorAll('.img-preview-wrapper').forEach(el => el.classList.remove('primary'));
+                    editListingForm.querySelectorAll('.img-preview-wrapper-existing').forEach(el => el.classList.remove('primary'));
+                    wrapper.classList.add('primary');
+                }
+            });
+            const deleteCheckbox = wrapper.querySelector('input[name="delete_images[]"]');
+            if (deleteCheckbox) {
+                deleteCheckbox.addEventListener('change', function(){
+                    if (this.checked && wrapper.classList.contains('primary')) {
+                        radio.checked = false; 
+                        wrapper.classList.remove('primary');
+                        const firstAvailableRadio = Array.from(existingRadiosInEdit).find(r => {
+                            const w = r.closest('.img-preview-wrapper-existing');
+                            const cb = w ? w.querySelector('input[name="delete_images[]"]') : null;
+                            return !cb || !cb.checked;
+                        });
+                        if (firstAvailableRadio) {
+                            firstAvailableRadio.checked = true;
+                            const firstAvailableWrapper = firstAvailableRadio.closest('.img-preview-wrapper-existing');
+                            if (firstAvailableWrapper) firstAvailableWrapper.classList.add('primary');
+                        } else if (newFilesDataEdit.length > 0 && primaryNewImageIdentifierInputEdit) {
+                            primaryNewImageIdentifierInputEdit.value = newFilesDataEdit[0].id;
+                            renderNewImagePreviewsEdit(); 
+                        }
+                    }
+                });
+            }
+        }
+    });
+
+    if (newFilesDataEdit.length === 0 && imagePreviewsContainerEdit.children.length === 0) {
+         const p = document.createElement('p');
+         p.textContent = 'Nepasirinkta naujų nuotraukų.';
+         imagePreviewsContainerEdit.appendChild(p);
+    } else if (newFilesDataEdit.length > 0) { 
+        renderNewImagePreviewsEdit();
+    }
+}
