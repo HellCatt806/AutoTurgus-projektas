@@ -1,6 +1,27 @@
 <?php
 require_once 'phpScript/config.php';
 ?>
+<?php
+$latest_listings = [];
+$sql_latest = "SELECT l.id, l.year, l.price, l.image_url,
+                      mk.name as make_name, md.name as model_name,
+                      vt.name as vehicle_type_name
+               FROM listings l
+               JOIN makes mk ON l.make_id = mk.id
+               JOIN models md ON l.model_id = md.id
+               JOIN vehicle_types vt ON l.vehicle_type_id = vt.id
+               ORDER BY l.created_at DESC
+               LIMIT 5";
+
+if (isset($conn)) {
+    $result_latest = $conn->query($sql_latest);
+    if ($result_latest && $result_latest->num_rows > 0) {
+        while ($row_latest = $result_latest->fetch_assoc()) {
+            $latest_listings[] = $row_latest;
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="lt">
 <head>
@@ -115,6 +136,45 @@ require_once 'phpScript/config.php';
             <button type="submit" class="search-button">Ieškoti</button>
         </form>
     </div>
+    <?php if (!empty($latest_listings)): ?>
+    <div class="container latest-listings-row-section">
+        <h2 style="text-align: center; color: #2c3e50; margin-top: 30px; margin-bottom: 25px;">Naujausi skelbimai</h2>
+        <div class="latest-listings-row-container">
+            <?php foreach ($latest_listings as $listing): ?>
+                <div class="latest-listing-item">
+                    <?php
+                    $image_display_source = 'img/default.png';
+                    if (!empty($listing['image_url'])) {
+                        $image_path_from_db = $listing['image_url'];
+                        $is_external_image = (strpos($image_path_from_db, 'http') === 0 || strpos($image_path_from_db, 'https') === 0);
+                        if ($is_external_image) {
+                            $image_display_source = htmlspecialchars($image_path_from_db);
+                        } else {
+                            $local_image_path = ltrim($image_path_from_db, '/');
+                            if (!empty($local_image_path) && file_exists($local_image_path)) {
+                                $image_display_source = htmlspecialchars($local_image_path);
+                            } elseif (!empty($local_image_path) && file_exists('uploads/' . basename($local_image_path))) {
+                               $image_display_source = htmlspecialchars('uploads/' . basename($local_image_path));
+                            }
+                        }
+                    }
+                    ?>
+                    <a href="pages/skelbimas.php?id=<?= $listing['id'] ?>" class="latest-listing-link">
+                        <img src="<?= $image_display_source ?>"
+                             alt="<?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?>"
+                             class="latest-listing-image"
+                             onerror="this.onerror=null; this.src='img/default.png';">
+                        <div class="latest-listing-info">
+                            <p class="latest-listing-title" title="<?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?>"><?= htmlspecialchars($listing['make_name'].' '.$listing['model_name']) ?></p>
+                            <p class="latest-listing-price"><?= number_format((float)$listing['price'], 0, ',', ' ') ?> €</p>
+                            <p class="latest-listing-year"><?= htmlspecialchars($listing['year']) ?> m. | <span style="font-size:0.9em; color: #6c757d;"><?= htmlspecialchars($listing['vehicle_type_name']) ?></span></p>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 <script>
     const PHP_SCRIPTS_ROOT_PATH = 'phpScript/';
 </script>
